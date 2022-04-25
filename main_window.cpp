@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
     lbl4->setText("Выход");
     tabbar->setTabButton(3, QTabBar::LeftSide, lbl4);
 
-
 }
 
 MainWindow::~MainWindow()

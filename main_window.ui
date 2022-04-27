@@ -50,7 +50,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -102,14 +102,17 @@
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::VLine</enum>
+             <enum>QFrame::NoFrame</enum>
             </property>
             <property name="gridStyle">
              <enum>Qt::SolidLine</enum>
             </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
             <column>
              <property name="text">
-              <string>Номер</string>
+              <string>Клиент</string>
              </property>
             </column>
             <column>
@@ -119,12 +122,17 @@
             </column>
             <column>
              <property name="text">
-              <string>Клиент</string>
+              <string>Статус</string>
              </property>
             </column>
             <column>
              <property name="text">
               <string>Дата</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Сумма</string>
              </property>
             </column>
            </widget>
@@ -180,7 +188,74 @@
        <attribute name="title">
         <string/>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3"/>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QPushButton" name="pushButton_3">
+              <property name="text">
+               <string>Добавить заказ</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>Удалить</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QDateEdit" name="dateEdit_2"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QTableWidget" name="tableWidget_2">
+            <column>
+             <property name="text">
+              <string>Поставщик</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Состав</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Статус</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Дата</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Сумма</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab_5">
        <attribute name="icon">

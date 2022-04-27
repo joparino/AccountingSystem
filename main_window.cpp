@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     QTabWidget *tabw =ui->tabWidget;
     tabw->setTabText(0, "");
     tabw->setTabText(1, "");
@@ -31,10 +32,20 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *lbl4 = new QLabel();
     lbl4->setText("Выход");
     tabbar->setTabButton(3, QTabBar::LeftSide, lbl4);
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+// Добавление строки с данными о заказе в таблицу
+void MainWindow::AddRowOrder(QString name)
+{
+    QTableWidgetItem* name_ = new QTableWidgetItem;
+    name_->setText(name);
+
+    ui->tableWidget->insertRow(0);
+    ui->tableWidget->setItem(0, 0, name_);
 }

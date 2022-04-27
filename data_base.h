@@ -8,8 +8,11 @@ namespace jp
     class DataBase
     {
     public:
-        QSqlDatabase db;
-        void Connection();
+        const void connection() noexcept(false);
+        QSqlDatabase& getContext();
+
+    private:
+        QSqlDatabase db_;
     };
 }
 

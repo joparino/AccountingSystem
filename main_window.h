@@ -15,6 +15,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void AddRowOrder(QString name);
+
 private:
     Ui::MainWindow *ui;
 };

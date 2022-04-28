@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>752</width>
-    <height>636</height>
+    <width>941</width>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,13 +91,13 @@
         <string/>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="0">
+        <item row="2" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QTableWidget" name="tableWidget">
             <property name="maximumSize">
              <size>
-              <width>580</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -139,7 +139,7 @@
           </item>
          </layout>
         </item>
-        <item row="0" column="0">
+        <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -172,6 +172,17 @@
           </item>
          </layout>
         </item>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <widget class="QLineEdit" name="searchOrder">
+            <property name="placeholderText">
+             <string>Поиск по клиенту....</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -189,14 +200,14 @@
         <string/>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
              <widget class="QPushButton" name="pushButton_3">
               <property name="text">
-               <string>Добавить заказ</string>
+               <string>Добавить книгу</string>
               </property>
              </widget>
             </item>
@@ -207,57 +218,61 @@
             <item>
              <widget class="QPushButton" name="pushButton_4">
               <property name="text">
-               <string>Удалить</string>
+               <string>Добавить поступление</string>
               </property>
              </widget>
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <item>
-             <widget class="QDateEdit" name="dateEdit_2"/>
-            </item>
-           </layout>
-          </item>
          </layout>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QTableWidget" name="tableWidget_2">
             <column>
              <property name="text">
-              <string>Поставщик</string>
+              <string>Название</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Состав</string>
+              <string>Автор</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Статус</string>
+              <string>Год издания</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Дата</string>
+              <string>Количество</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Сумма</string>
+              <string>Цена</string>
              </property>
             </column>
            </widget>
           </item>
          </layout>
         </item>
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="placeholderText">
+             <string>Поиск книги...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_5">
+      <widget class="QWidget" name="tab_3">
        <attribute name="icon">
         <iconset>
          <normaloff>../icons/clipboard.png</normaloff>../icons/clipboard.png</iconset>
@@ -266,7 +281,7 @@
         <string/>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tab_6">
+      <widget class="QWidget" name="tab_4">
        <attribute name="title">
         <string/>
        </attribute>

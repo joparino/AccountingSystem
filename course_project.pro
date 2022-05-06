@@ -11,11 +11,13 @@ CONFIG += c++17
 
 SOURCES += \
     Controller.cpp \
+    bloom.cpp \
     data_base.cpp \
     main.cpp \
     main_window.cpp
 
 HEADERS += \
+    bloom.h \
     controller.h \
     data_base.h \
     main_window.h

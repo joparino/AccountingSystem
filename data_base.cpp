@@ -24,7 +24,7 @@ const void jp::DataBase::connection() noexcept(false)
 }
 
 
-QSqlDatabase& jp::DataBase::getContext()
+QSqlDatabase& jp::DataBase::getContext() noexcept
 {
     return db_;
 }

@@ -2,12 +2,16 @@
 #include "ui_main_window.h"
 #include <QLabel>
 #include <QTabBar>
+#include <QHeaderView>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QTabWidget *tabw =ui->tabWidget;
     tabw->setTabText(0, "");
@@ -22,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     tabbar->setTabButton(0, QTabBar::LeftSide, lbl1);
 
     QLabel *lbl2 = new QLabel();
-    lbl2->setText("Заказы поставщики");
+    lbl2->setText("Книги");
     tabbar->setTabButton(1, QTabBar::LeftSide, lbl2);
 
     QLabel *lbl3 = new QLabel();
@@ -40,12 +44,76 @@ MainWindow::~MainWindow()
 }
 
 
-// Добавление строки с данными о заказе в таблицу
-void MainWindow::AddRowOrder(QString name)
+void MainWindow::searchOrder()
 {
-    QTableWidgetItem* name_ = new QTableWidgetItem;
-    name_->setText(name);
+    emit searchTriggered(ui->searchOrder->text());
+}
+
+
+// Добавление строки с данными о заказе в таблицу
+void MainWindow::addRowOrder(QString client, QString book, QString adress, QString status, QString date, QString sum)
+{
+    QTableWidgetItem* client_ = new QTableWidgetItem;
+    client_->setText(client);
+
+    QTableWidgetItem* book_ = new QTableWidgetItem;
+    book_->setText(book);
+
+    QTableWidgetItem* adress_ = new QTableWidgetItem;
+    adress_->setText(adress);
+
+    QTableWidgetItem* status_ = new QTableWidgetItem;
+    status_->setText(status);
+
+    QTableWidgetItem* date_ = new QTableWidgetItem;
+    date_->setText(date);
+
+    QTableWidgetItem* sum_ = new QTableWidgetItem;
+    sum_->setText(sum);
 
     ui->tableWidget->insertRow(0);
-    ui->tableWidget->setItem(0, 0, name_);
+    ui->tableWidget->setItem(0, 0, client_);
+    ui->tableWidget->setItem(0, 1, book_);
+    ui->tableWidget->setItem(0, 2, adress_);
+    ui->tableWidget->setItem(0, 3, status_);
+    ui->tableWidget->setItem(0, 4, date_);
+    ui->tableWidget->setItem(0, 5, sum_);
+}
+
+
+// Добавление строки с данными о книгах в таблицу
+void MainWindow::addRowBook(QString book, QString author, QString genre, QString year, QString price, QString count)
+{
+    QTableWidgetItem* book_ = new QTableWidgetItem;
+    book_->setText(book);
+
+    QTableWidgetItem* author_ = new QTableWidgetItem;
+    author_->setText(author);
+
+    QTableWidgetItem* genre_ = new QTableWidgetItem;
+    genre_->setText(genre);
+
+    QTableWidgetItem* year_ = new QTableWidgetItem;
+    year_->setText(year);
+
+    QTableWidgetItem* price_ = new QTableWidgetItem;
+    price_->setText(price);
+
+    QTableWidgetItem* count_ = new QTableWidgetItem;
+    count_->setText(count);
+
+    ui->tableWidget_2->insertRow(0);
+    ui->tableWidget_2->setItem(0, 0, book_);
+    ui->tableWidget_2->setItem(0, 1, author_);
+    ui->tableWidget_2->setItem(0, 2, genre_);
+    ui->tableWidget_2->setItem(0, 3, year_);
+    ui->tableWidget_2->setItem(0, 4, price_);
+    ui->tableWidget_2->setItem(0, 5, count_);
+}
+
+
+void MainWindow::clearOrder()
+{
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0);
 }

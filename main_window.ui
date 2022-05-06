@@ -50,7 +50,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -85,7 +85,7 @@
        </property>
        <attribute name="icon">
         <iconset>
-         <normaloff>../icons/shop.png</normaloff>../icons/shop.png</iconset>
+         <normaloff>../icons/shop_book.png</normaloff>../icons/shop_book.png</iconset>
        </attribute>
        <attribute name="title">
         <string/>
@@ -118,6 +118,11 @@
             <column>
              <property name="text">
               <string>Состав</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Адрес</string>
              </property>
             </column>
             <column>
@@ -194,7 +199,7 @@
        </property>
        <attribute name="icon">
         <iconset>
-         <normaloff>../icons/trolley.png</normaloff>../icons/trolley.png</iconset>
+         <normaloff>../icons/book.png</normaloff>../icons/book.png</iconset>
        </attribute>
        <attribute name="title">
         <string/>
@@ -242,17 +247,22 @@
             </column>
             <column>
              <property name="text">
+              <string>Жанр(-ы)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
               <string>Год издания</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Количество</string>
+              <string>Цена</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Цена</string>
+              <string>Количество</string>
              </property>
             </column>
            </widget>
@@ -293,5 +303,25 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>searchOrder</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>searchOrder()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>searchOrder()</slot>
+ </slots>
 </ui>

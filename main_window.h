@@ -15,7 +15,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void AddRowOrder(QString name);
+    void addRowOrder(QString client, QString book, QString adress, QString status, QString date, QString sum) noexcept;
+    void addRowBook(QString book, QString author, QString genre, QString year, QString price, QString count) noexcept;
+    void clearOrder() noexcept;
+
+signals:
+    void searchTriggered(QString str);
+
+public slots:
+    void searchOrder();
 
 private:
     Ui::MainWindow *ui;

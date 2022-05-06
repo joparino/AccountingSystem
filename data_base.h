@@ -9,7 +9,7 @@ namespace jp
     {
     public:
         const void connection() noexcept(false);
-        QSqlDatabase& getContext();
+        QSqlDatabase& getContext() noexcept;
 
     private:
         QSqlDatabase db_;

@@ -1,7 +1,10 @@
 
 #include <QApplication>
+#include <QDebug>
+#include "windows.h"
 #include "main_window.h"
 #include "data_base.h"
+#include "bloom.h"
 #include "controller.h"
 
 
@@ -10,13 +13,16 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     jp::DataBase db;
-    db.connection();
-
     MainWindow w;
+
+    db.connection();
 
     jp::Controller c(w, db.getContext());
 
-    c.LoadderOrder();
+    QObject::connect(&w, &MainWindow::searchTriggered,
+                     &c, &jp::Controller::searchOrder);
+
+    c.loader();
 
     w.show();
 

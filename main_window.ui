@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Книжный магазин</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/shop.png</normaloff>../icons/shop.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -94,7 +98,7 @@
         <item row="2" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QTableWidget" name="tableWidget">
+           <widget class="QTableWidget" name="tableOrderWidget">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -103,6 +107,15 @@
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <property name="gridStyle">
              <enum>Qt::SolidLine</enum>
@@ -117,7 +130,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Состав</string>
+              <string>Книги</string>
              </property>
             </column>
             <column>
@@ -149,7 +162,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="addOrder">
               <property name="text">
                <string>Добавить заказ</string>
               </property>
@@ -210,7 +223,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="addBook">
               <property name="text">
                <string>Добавить книгу</string>
               </property>
@@ -234,7 +247,46 @@
         <item row="2" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QTableWidget" name="tableWidget_2">
+           <widget class="QTableWidget" name="tableBookWidget">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="midLineWidth">
+             <number>2</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="tabKeyNavigation">
+             <bool>true</bool>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="textElideMode">
+             <enum>Qt::ElideRight</enum>
+            </property>
+            <property name="showGrid">
+             <bool>true</bool>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::SolidLine</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
             <column>
              <property name="text">
               <string>Название</string>
@@ -248,6 +300,11 @@
             <column>
              <property name="text">
               <string>Жанр(-ы)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Издатель</string>
              </property>
             </column>
             <column>
@@ -272,7 +329,7 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLineEdit" name="lineEdit_2">
+           <widget class="QLineEdit" name="searchBook">
             <property name="placeholderText">
              <string>Поиск книги...</string>
             </property>
@@ -320,8 +377,59 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addOrder</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddOrderWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addBook</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddBookWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>341</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchBook</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>searchBook()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>searchOrder()</slot>
+  <slot>goToAddOrderWindow()</slot>
+  <slot>goToAddBookWindow()</slot>
+  <slot>searchBook()</slot>
  </slots>
 </ui>

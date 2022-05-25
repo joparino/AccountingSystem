@@ -10,14 +10,10 @@ const void jp::DataBase::connection() noexcept(false)
     QString host = "localhost";
     QString database = "BookStore";
     db_.setDatabaseName(QString("DRIVER={SQL Server};"
-                "SERVER=DESKTOP-FPF4P4U\\SQLEXPRESS;DATABASE=BookStore;Persist Security Info=true;")
+              "SERVER=DESKTOP-FPF4P4U\\SQLEXPRESS;DATABASE=BookStore;Persist Security Info=true;")
               .arg(host, database));
 
-    if(db_.open())
-    {
-        QMessageBox::information(0, "Успех", "");
-    }
-    else
+    if(!db_.open())
     {
         QMessageBox::critical(0, "Ошибка", db_.lastError().text());
     }

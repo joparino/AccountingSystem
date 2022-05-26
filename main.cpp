@@ -1,8 +1,6 @@
 
 #include <QApplication>
 #include <QDebug>
-#include "windows/add_book_window.h"
-#include "windows/add_order_window.h"
 #include "windows/main_window.h"
 #include "data_base.h"
 #include "bloom.h"
@@ -16,11 +14,12 @@ int main(int argc, char *argv[])
     jp::DataBase db;
     AddOrderWindow ow;
     AddBookWindow bw;
-    MainWindow w(ow, bw);
+    AddArrivalWindow aw;
+    MainWindow w(ow, bw, aw);
 
     db.connection();
 
-    jp::Controller c(w, ow, bw, db.getContext());
+    jp::Controller c(w, ow, bw, aw, db.getContext());
 
     QObject::connect(&w, &MainWindow::searchOrderTriggered,
                      &c, &jp::Controller::searchOrder);
@@ -28,8 +27,13 @@ int main(int argc, char *argv[])
                      &c, &jp::Controller::searchBook);
     QObject::connect(&bw, &AddBookWindow::addBookTriggered,
                      &c, &jp::Controller::addBook);
+    QObject::connect(&aw, &AddArrivalWindow::addArrivalTriggered,
+                     &c, &jp::Controller::addArrival);
 
-    c.loader();
+    c.loaderOrder();
+    c.loaderBook();
+    c.loaderOrderWindow();
+    c.loaderBookWindow();
 
     w.show();
 

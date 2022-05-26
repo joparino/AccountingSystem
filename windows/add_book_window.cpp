@@ -7,6 +7,10 @@ AddBookWindow::AddBookWindow(QWidget *parent) :
     ui(new Ui::AddBookWindow)
 {
     ui->setupUi(this);
+
+    ui->comboAuthor->lineEdit()->setPlaceholderText("Выберите автора...");
+    ui->comboPublisher->lineEdit()->setPlaceholderText("Выберите издателя...");
+    ui->comboGenre->lineEdit()->setPlaceholderText("Выберите жанр...");
 }
 
 AddBookWindow::~AddBookWindow()
@@ -15,18 +19,30 @@ AddBookWindow::~AddBookWindow()
 }
 
 
-void AddBookWindow::close()
+void AddBookWindow::addItemAuthor(QString author)
 {
-    AddBookWindow::reject();
+    ui->comboAuthor->addItem(author);
+}
+
+
+void AddBookWindow::addItemPublisher(QString publisher)
+{
+    ui->comboPublisher->addItem(publisher);
+}
+
+
+void AddBookWindow::addItemGenre(QString genre)
+{
+    ui->comboGenre->addItem(genre);
 }
 
 
 void AddBookWindow::addBook()
 {
-    if (!ui->lineTitle->text().isEmpty() && !ui->lineAuthor->text().isEmpty() && !ui->lineGenre->text().isEmpty()
-       && !ui->linePublisher->text().isEmpty() && !ui->lineYear->text().isEmpty() && !ui->linePrice->text().isEmpty())
+    if (!ui->lineTitle->text().isEmpty() && !ui->comboAuthor->currentText().isEmpty() && !ui->comboGenre->currentText().isEmpty()
+       && !ui->comboPublisher->currentText().isEmpty() && !ui->lineYear->text().isEmpty() && !ui->linePrice->text().isEmpty())
     {
-        emit addBookTriggered(ui->lineTitle->text(), ui->lineAuthor->text(), ui->lineGenre->text(),
-                              ui->linePublisher->text(), ui->lineYear->text(), ui->linePrice->text());
+        emit addBookTriggered(ui->lineTitle->text(), ui->comboAuthor->currentText(), ui->comboGenre->currentText(),
+                              ui->comboPublisher->currentText(), ui->lineYear->text(), ui->linePrice->text());
     }
 }

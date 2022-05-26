@@ -17,9 +17,6 @@ public:
     ~AddOrderWindow();
     void addTitleBook(QString title);
 
-public slots:
-    void textBookChanged(QString str1);
-
 private:
     Ui::AddOrderWindow *ui;
 };

@@ -54,7 +54,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -234,7 +234,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="addArrival">
               <property name="text">
                <string>Добавить поступление</string>
               </property>
@@ -425,11 +425,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addArrival</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddArrivalWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>729</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>searchOrder()</slot>
   <slot>goToAddOrderWindow()</slot>
   <slot>goToAddBookWindow()</slot>
   <slot>searchBook()</slot>
+  <slot>goToAddArrivalWindow()</slot>
  </slots>
 </ui>

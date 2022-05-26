@@ -8,11 +8,12 @@
 #include "add_book_window.h"
 
 
-MainWindow::MainWindow(AddOrderWindow& ow, AddBookWindow& bw, QWidget *parent)
+MainWindow::MainWindow(AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       ow_(ow),
-      bw_(bw)
+      bw_(bw),
+      aw_(aw)
 {
     ui->setupUi(this);
 
@@ -77,6 +78,12 @@ void MainWindow::goToAddOrderWindow()
 void MainWindow::goToAddBookWindow()
 {
     bw_.exec();
+}
+
+
+void MainWindow::goToAddArrivalWindow()
+{
+    aw_.exec();
 }
 
 

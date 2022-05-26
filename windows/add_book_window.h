@@ -14,7 +14,9 @@ class AddBookWindow : public QDialog
 public:
     explicit AddBookWindow(QWidget *parent = nullptr);
     ~AddBookWindow();
-    void close();
+    void addItemAuthor(QString author);
+    void addItemPublisher(QString publisher);
+    void addItemGenre(QString genre);
 
 public slots:
     void addBook();

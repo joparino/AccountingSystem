@@ -3,6 +3,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "windows/add_arrival_window.h"
 #include "windows/add_book_window.h"
 #include "windows/add_order_window.h"
 
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(AddOrderWindow& ow, AddBookWindow& bw, QWidget *parent = nullptr);
+    MainWindow(AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QWidget *parent = nullptr);
     ~MainWindow();
 
     void addRowOrder(QString client, QString book, QString adress,
@@ -34,10 +35,12 @@ public slots:
     void searchBook();
     void goToAddOrderWindow();
     void goToAddBookWindow();
+    void goToAddArrivalWindow();
 
 private:
     Ui::MainWindow *ui;
     AddOrderWindow& ow_;
     AddBookWindow& bw_;
+    AddArrivalWindow& aw_;
 };
 #endif // MAINWINDOW_H

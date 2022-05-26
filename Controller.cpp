@@ -6,10 +6,11 @@
 #include <QSqlError>
 #include "controller.h"
 
-jp::Controller::Controller(MainWindow& window, AddOrderWindow& ow, AddBookWindow& bw, QSqlDatabase& db):
+jp::Controller::Controller(MainWindow& window, AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QSqlDatabase& db):
     window_(window),
     ow_(ow),
     bw_(bw),
+    aw_(aw),
     db_(db),
     bf_(7),
     bfb_(7)
@@ -17,7 +18,7 @@ jp::Controller::Controller(MainWindow& window, AddOrderWindow& ow, AddBookWindow
 
 
 // Запрос к бд для получения данных о заказе
-void jp::Controller::loader() noexcept
+void jp::Controller::loaderOrder() noexcept
 {
     QSqlQuery queryOrder(db_);
     queryOrder.exec( "SELECT Client.name, STRING_AGG(Book.title, ', '), Purschase.address, Status.type, Purschase.date, Purschase.sum FROM Purschase\
@@ -33,7 +34,11 @@ void jp::Controller::loader() noexcept
         window_.addRowOrder(queryOrder.value(0).toString(), queryOrder.value(1).toString(), queryOrder.value(2).toString(),
                             queryOrder.value(3).toString(), queryOrder.value(4).toString(), queryOrder.value(5).toString());
     }
+}
 
+
+void jp::Controller::loaderBook() noexcept
+{
     QSqlQuery queryBook(db_);
     queryBook.exec( "SELECT Book.title, Author.nameOfAuthor, Genre.nameOfGenre, Publisher.nameOfPublisher, Book.year, Book.price, Book.count FROM Book\
                     JOIN Author ON Author.id = Book.id_author\
@@ -42,13 +47,17 @@ void jp::Controller::loader() noexcept
 
     while (queryBook.next())
     {
-        bfb_.insert(queryOrder.value(0).toString().toStdString().c_str());
+        bfb_.insert(queryBook.value(0).toString().toStdString().c_str());
         window_.addRowBook(queryBook.value(0).toString(), queryBook.value(1).toString(),
                            queryBook.value(2).toString(), queryBook.value(3).toString(),
                            queryBook.value(4).toString(), queryBook.value(5).toString(),
                            queryBook.value(6).toString());
-    }        
+    }
+}
 
+
+void jp::Controller::loaderOrderWindow() noexcept
+{
     QSqlQuery queryTitleBook(db_);
     queryTitleBook.exec( "SELECT Book.title FROM Book");
 
@@ -59,8 +68,46 @@ void jp::Controller::loader() noexcept
 }
 
 
+void jp::Controller::loaderBookWindow() noexcept
+{
+    QSqlQuery queryAuthor(db_);
+    QSqlQuery queryPublisher(db_);
+    QSqlQuery queryGenre(db_);
+    QSqlQuery queryTitle(db_);
+    queryAuthor.exec( "SELECT nameOfAuthor FROM Author");
+    queryPublisher.exec( "SELECT nameOfPublisher FROM Publisher");
+    queryGenre.exec( "SELECT nameOfGenre FROM Genre");
+    queryTitle.exec( "SELECT title FROM Book");
+
+    while (queryAuthor.next())
+    {
+        bw_.addItemAuthor(queryAuthor.value(0).toString());
+    }
+
+    while (queryPublisher.next())
+    {
+        bw_.addItemPublisher(queryPublisher.value(0).toString());
+    }
+
+    while (queryGenre.next())
+    {
+        bw_.addItemGenre(queryGenre.value(0).toString());
+    }
+
+    while (queryTitle.next())
+    {
+        aw_.addItemBook(queryTitle.value(0).toString());
+    }
+}
+
+
 void jp::Controller::searchOrder(QString str)
 {
+    if (str == "")
+    {
+        window_.clearOrder();
+        loaderOrder();
+    }
     if (bf_.check(str.toStdString().c_str()))
     {
         QSqlQuery querySearchOrder(db_);
@@ -93,6 +140,11 @@ void jp::Controller::searchOrder(QString str)
 
 void jp::Controller::searchBook(QString str)
 {
+    if (str == "")
+    {
+        window_.clearBook();
+        loaderBook();
+    }
     if (bfb_.check(str.toStdString().c_str()))
     {
         QSqlQuery querySearchBook(db_);
@@ -134,7 +186,6 @@ void jp::Controller::addBook(QString title, QString author, QString genre,
                         set @GenreID = (SELECT id FROM Genre Where nameOfGenre = :genre)\
                         set @PublisherID = (SELECT id FROM Publisher Where nameOfPublisher = :publisher)\
                         INSERT Book VALUES (:title, @AuthorID, @GenreID, @PublisherID, :year, :price, '0')");
-    // queryAddBook.bindValue(":name", QString("%") + str + '%');
     queryAddBook.bindValue(":title", title);
     queryAddBook.bindValue(":author", author);
     queryAddBook.bindValue(":genre", genre);
@@ -143,10 +194,27 @@ void jp::Controller::addBook(QString title, QString author, QString genre,
     queryAddBook.bindValue(":price", price);
     queryAddBook.exec();
 
-    if (!queryAddBook.isValid())
-    {
-        QMessageBox::critical(nullptr, "Неверно заполены поля", "Проверьте поля и заполните их правильно");
-    }
+//    if (!queryAddBook.isValid())
+//    {
+//        QMessageBox::critical(nullptr, "Неверно заполнены поля", "Проверьте поля и заполните их правильно");
+//    }
 
-    bw_.close();
+    loaderBook();
+    bw_.reject();
+}
+
+
+void jp::Controller::addArrival(QString title, QString count)
+{
+    QSqlQuery queryAddArrival(db_);
+    queryAddArrival.prepare("DECLARE @BookID int\
+                            set @BookID = (SELECT id FROM Book Where title = :title)\
+                            UPDATE Book SET count = count + :count WHERE id = @BookID");
+    queryAddArrival.bindValue(":title", title);
+    queryAddArrival.bindValue(":count", count);
+    queryAddArrival.exec();
+
+    window_.clearBook();
+    loaderBook();
+    aw_.reject();
 }

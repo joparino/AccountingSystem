@@ -28,9 +28,12 @@
    <item row="3" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QLineEdit" name="lineGenre">
+      <widget class="QComboBox" name="comboGenre">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
-        <string>Жанр</string>
+        <string>Выберите жанр...</string>
        </property>
       </widget>
      </item>
@@ -78,9 +81,12 @@
    <item row="2" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLineEdit" name="lineAuthor">
+      <widget class="QComboBox" name="comboAuthor">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
-        <string>Автор</string>
+        <string>Выберите автора...</string>
        </property>
       </widget>
      </item>
@@ -89,9 +95,12 @@
    <item row="4" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QLineEdit" name="linePublisher">
+      <widget class="QComboBox" name="comboPublisher">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
-        <string>Издательство</string>
+        <string>Выберите издательство...</string>
        </property>
       </widget>
      </item>

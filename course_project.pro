@@ -14,6 +14,7 @@ SOURCES += \
     bloom.cpp \
     data_base.cpp \
     main.cpp \
+    windows/add_arrival_window.cpp \
     windows/main_window.cpp \
     windows/add_book_window.cpp \
     windows/add_order_window.cpp
@@ -22,12 +23,13 @@ HEADERS += \
     bloom.h \
     controller.h \
     data_base.h \
+    windows/add_arrival_window.h \
     windows/main_window.h \
     windows/add_book_window.h \
-    windows/add_order_window.h \
-    windows/main_window.h
+    windows/add_order_window.h
 
 FORMS += \
+    add_arrival_window.ui \
     add_book_window.ui \
     add_order_window.ui \
     main_window.ui

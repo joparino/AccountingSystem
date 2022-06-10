@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddArrivalWindow</class>
- <widget class="QDialog" name="AddArrivalWindow">
+ <class>AddClientWindow</class>
+ <widget class="QDialog" name="AddClientWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>200</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Добавить поступление</string>
+   <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QComboBox" name="comboBook">
-       <property name="editable">
-        <bool>true</bool>
-       </property>
-       <property name="insertPolicy">
-        <enum>QComboBox::InsertAtBottom</enum>
-       </property>
-       <property name="placeholderText">
-        <string>Выберите книгу...</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -41,21 +24,26 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLineEdit" name="lineName">
+       <property name="placeholderText">
+        <string>Введите имя клиента...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="1" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QSpinBox" name="countBook">
-       <property name="suffix">
-        <string/>
+      <widget class="QLineEdit" name="lineNumber">
+       <property name="maxLength">
+        <number>15</number>
        </property>
-       <property name="prefix">
-        <string/>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>1000</number>
+       <property name="placeholderText">
+        <string>Введите номер клиента</string>
        </property>
       </widget>
      </item>
@@ -68,8 +56,8 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AddArrivalWindow</receiver>
-   <slot>addArrival()</slot>
+   <receiver>AddClientWindow</receiver>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>248</x>
@@ -84,7 +72,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AddArrivalWindow</receiver>
+   <receiver>AddClientWindow</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -98,7 +86,4 @@
    </hints>
   </connection>
  </connections>
- <slots>
-  <slot>addArrival()</slot>
- </slots>
 </ui>

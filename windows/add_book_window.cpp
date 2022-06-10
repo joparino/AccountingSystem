@@ -1,6 +1,8 @@
 
+#include "qmessagebox.h"
 #include "windows/add_book_window.h"
 #include "ui_add_book_window.h"
+#include "entities/models.h"
 
 AddBookWindow::AddBookWindow(QWidget *parent) :
     QDialog(parent),
@@ -45,4 +47,21 @@ void AddBookWindow::addBook()
         emit addBookTriggered(ui->lineTitle->text(), ui->comboAuthor->currentText(), ui->comboGenre->currentText(),
                               ui->comboPublisher->currentText(), ui->lineYear->text(), ui->linePrice->text());
     }
+    else
+    {
+        QMessageBox::critical(this, "Не все поля заполены", "Пожалуйста заполните все поля");
+    }
+}
+
+
+void AddBookWindow::reject()
+{
+    ui->lineTitle->setText("");
+    ui->lineYear->setText("");
+    ui->linePrice->setText("");
+
+    ui->comboAuthor->setCurrentIndex(-1);
+    ui->comboGenre->setCurrentIndex(-1);
+    ui->comboPublisher->setCurrentIndex(-1);
+    AddBookWindow::hide();
 }

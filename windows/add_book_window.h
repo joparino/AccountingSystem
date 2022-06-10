@@ -1,3 +1,4 @@
+
 #ifndef ADD_BOOK_WINDOW_H
 #define ADD_BOOK_WINDOW_H
 
@@ -20,6 +21,7 @@ public:
 
 public slots:
     void addBook();
+    void reject();
 
 signals:
     void addBookTriggered(QString title, QString author, QString genre,
@@ -29,4 +31,4 @@ private:
     Ui::AddBookWindow *ui;
 };
 
-#endif // ADD_BOOK_WINDOW_H
+#endif

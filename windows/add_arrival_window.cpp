@@ -1,6 +1,7 @@
 
 #include "add_arrival_window.h"
 #include "qlineedit.h"
+#include "qmessagebox.h"
 #include "ui_add_arrival_window.h"
 
 AddArrivalWindow::AddArrivalWindow(QWidget *parent) :
@@ -24,6 +25,18 @@ void AddArrivalWindow::addArrival()
     {
         emit addArrivalTriggered(ui->comboBook->currentText(), ui->countBook->text());
     }
+    else
+    {
+        QMessageBox::critical(this, "Не выбрана книга", "Пожалуйста выберите книгу");
+    }
+}
+
+
+void AddArrivalWindow::reject()
+{
+    ui->comboBook->setCurrentIndex(-1);
+    ui->countBook->setValue(1);
+    AddArrivalWindow::hide();
 }
 
 

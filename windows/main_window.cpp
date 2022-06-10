@@ -4,15 +4,14 @@
 #include <QHeaderView>
 #include "ui_main_window.h"
 #include "main_window.h"
-#include "add_order_window.h"
-#include "add_book_window.h"
 
 
-MainWindow::MainWindow(AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QWidget *parent)
+MainWindow::MainWindow(OrderWindow& ow, AddOrderWindow& aow, AddBookWindow& abw, AddArrivalWindow& aw, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       ow_(ow),
-      bw_(bw),
+      aow_(aow),
+      abw_(abw),
       aw_(aw)
 {
     ui->setupUi(this);
@@ -20,10 +19,7 @@ MainWindow::MainWindow(AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& 
     ui->tableOrderWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableBookWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-    ui->tableOrderWidget->horizontalHeader()->hide();
     ui->tableOrderWidget->verticalHeader()->hide();
-
-    ui->tableBookWidget->horizontalHeader()->hide();
     ui->tableBookWidget->verticalHeader()->hide();
 
     QTabWidget *tabw =ui->tabWidget;
@@ -69,15 +65,23 @@ void MainWindow::searchBook()
 }
 
 
+void MainWindow::goToOrderWindow()
+{
+    int index = ui->tableOrderWidget->currentRow();
+    ow_.add(ui->tableOrderWidget->item(index, 0)->data(Qt::UserRole).value<std::shared_ptr<jp::Order>>());
+    ow_.exec();
+}
+
+
 void MainWindow::goToAddOrderWindow()
 {
-    ow_.exec();
+    aow_.exec();
 }
 
 
 void MainWindow::goToAddBookWindow()
 {
-    bw_.exec();
+    abw_.exec();
 }
 
 
@@ -88,68 +92,87 @@ void MainWindow::goToAddArrivalWindow()
 
 
 // Добавление строки с данными о заказе в таблицу
-void MainWindow::addRowOrder(QString client, QString book, QString adress, QString status, QString date, QString sum) noexcept
+void MainWindow::addRowOrder(std::shared_ptr<jp::Order>& order) noexcept
 {
     QTableWidgetItem* client_ = new QTableWidgetItem;
-    client_->setText(client);
-
-    QTableWidgetItem* book_ = new QTableWidgetItem;
-    book_->setText(book);
+    client_->setText(QString::fromStdString(order->client->name));
 
     QTableWidgetItem* adress_ = new QTableWidgetItem;
-    adress_->setText(adress);
+    adress_->setText(QString::fromStdString(order->address));
 
     QTableWidgetItem* status_ = new QTableWidgetItem;
-    status_->setText(status);
+    status_->setText(QString::fromStdString(order->status->name));
 
     QTableWidgetItem* date_ = new QTableWidgetItem;
-    date_->setText(date);
+    date_->setText(QString::fromStdString(order->date));
 
     QTableWidgetItem* sum_ = new QTableWidgetItem;
-    sum_->setText(sum);
+    sum_->setText(QString::number(order->sum));
 
     ui->tableOrderWidget->insertRow(0);
     ui->tableOrderWidget->setItem(0, 0, client_);
-    ui->tableOrderWidget->setItem(0, 1, book_);
-    ui->tableOrderWidget->setItem(0, 2, adress_);
-    ui->tableOrderWidget->setItem(0, 3, status_);
-    ui->tableOrderWidget->setItem(0, 4, date_);
-    ui->tableOrderWidget->setItem(0, 5, sum_);
+    ui->tableOrderWidget->item(0, 0)->setData(Qt::UserRole, QVariant::fromValue(order));
+    ui->tableOrderWidget->item(0, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableOrderWidget->setItem(0, 1, adress_);
+    ui->tableOrderWidget->item(0, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableOrderWidget->setItem(0, 2, status_);
+    ui->tableOrderWidget->item(0, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableOrderWidget->setItem(0, 3, date_);
+    ui->tableOrderWidget->item(0, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableOrderWidget->setItem(0, 4, sum_);
+    ui->tableOrderWidget->item(0, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 }
 
 
 // Добавление строки с данными о книгах в таблицу
-void MainWindow::addRowBook(QString book, QString author, QString genre, QString year, QString publisher, QString price, QString count) noexcept
+void MainWindow::addRowBook(std::shared_ptr<jp::Book>& book) noexcept
 {
     QTableWidgetItem* book_ = new QTableWidgetItem;
-    book_->setText(book);
+    book_->setText(QString::fromStdString(book->title));
 
     QTableWidgetItem* author_ = new QTableWidgetItem;
-    author_->setText(author);
+    author_->setText(QString::fromStdString(book->author->name));
 
     QTableWidgetItem* genre_ = new QTableWidgetItem;
-    genre_->setText(genre);
+    genre_->setText(QString::fromStdString(book->genre->name));
 
     QTableWidgetItem* publisher_ = new QTableWidgetItem;
-    publisher_->setText(publisher);
+    publisher_->setText(QString::fromStdString(book->publisher->name));
 
     QTableWidgetItem* year_ = new QTableWidgetItem;
-    year_->setText(year);
+    year_->setText(QString::fromStdString(book->year));
 
     QTableWidgetItem* price_ = new QTableWidgetItem;
-    price_->setText(price);
+    price_->setText(QString::number(book->price));
 
     QTableWidgetItem* count_ = new QTableWidgetItem;
-    count_->setText(count);
+    count_->setText(QString::number(book->count));
 
     ui->tableBookWidget->insertRow(0);
     ui->tableBookWidget->setItem(0, 0, book_);
+    ui->tableBookWidget->item(0, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
     ui->tableBookWidget->setItem(0, 1, author_);
-    ui->tableBookWidget->setItem(0, 2, publisher_);
-    ui->tableBookWidget->setItem(0, 3, genre_);
+    ui->tableBookWidget->item(0, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableBookWidget->setItem(0, 2, genre_);
+    ui->tableBookWidget->item(0, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
+    ui->tableBookWidget->setItem(0, 3, publisher_);
+    ui->tableBookWidget->item(0, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
     ui->tableBookWidget->setItem(0, 4, year_);
+    ui->tableBookWidget->item(0, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
     ui->tableBookWidget->setItem(0, 5, price_);
+    ui->tableBookWidget->item(0, 5)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
     ui->tableBookWidget->setItem(0, 6, count_);
+    ui->tableBookWidget->item(0, 6)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 }
 
 

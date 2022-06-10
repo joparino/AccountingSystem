@@ -6,6 +6,8 @@
 #include "windows/add_arrival_window.h"
 #include "windows/add_book_window.h"
 #include "windows/add_order_window.h"
+#include "windows/order_window.h"
+#include "entities/models.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,13 +18,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QWidget *parent = nullptr);
+    MainWindow(OrderWindow& ow, AddOrderWindow& aow, AddBookWindow& abw, AddArrivalWindow& aw, QWidget *parent = nullptr);
     ~MainWindow();
 
-    void addRowOrder(QString client, QString book, QString adress,
-                     QString status, QString date, QString sum) noexcept;
-    void addRowBook(QString book, QString author, QString genre,
-                    QString publisher, QString year, QString price, QString count) noexcept;
+    void addRowOrder(std::shared_ptr<jp::Order>& order) noexcept;
+    void addRowBook(std::shared_ptr<jp::Book>& book) noexcept;
     void clearOrder() noexcept;
     void clearBook() noexcept;
 
@@ -33,14 +33,16 @@ signals:
 public slots:
     void searchOrder();
     void searchBook();
+    void goToOrderWindow();
     void goToAddOrderWindow();
     void goToAddBookWindow();
     void goToAddArrivalWindow();
 
 private:
     Ui::MainWindow *ui;
-    AddOrderWindow& ow_;
-    AddBookWindow& bw_;
+    OrderWindow& ow_;
+    AddOrderWindow& aow_;
+    AddBookWindow& abw_;
     AddArrivalWindow& aw_;
 };
-#endif // MAINWINDOW_H
+#endif

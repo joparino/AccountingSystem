@@ -1,3 +1,4 @@
+
 #ifndef ADD_ARRIVAL_WINDOW_H
 #define ADD_ARRIVAL_WINDOW_H
 
@@ -18,6 +19,7 @@ public:
 
 public slots:
     void addArrival();
+    void reject();
 
 signals:
     void addArrivalTriggered(QString title, QString count);
@@ -26,4 +28,4 @@ private:
     Ui::AddArrivalWindow *ui;
 };
 
-#endif // ADD_ARRIVAL_WINDOW_H
+#endif

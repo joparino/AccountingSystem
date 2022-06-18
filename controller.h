@@ -3,40 +3,57 @@
 #define CONTROLLER_H
 
 #include <QtSql/QSqlDatabase>
-#include "bloom.h"
+#include "entities/models.h"
+#include "data_layer.h"
+#include "windows/administrator_window.h"
 #include "windows/main_window.h"
 
 namespace jp
 {
-    class Controller : public QObject
+    class Controller
     {
-       Q_OBJECT
+       friend class AppBusinessLogic;
 
     public:
-        Controller(MainWindow& window, AddOrderWindow& ow, AddBookWindow& bw, AddArrivalWindow& aw, QSqlDatabase& db);
-        void loaderOrder() noexcept;
-        void loaderBook() noexcept;
-        void loaderOrderWindow() noexcept;
-        void loaderBookWindow() noexcept;
+        Controller(QSqlDatabase& db);
 
-    public slots:
-        void searchOrder(QString str);
-        void searchBook(QString str);
-        void addBook(QString title, QString author, QString genre,
+        int authorization(std::string login, std::string password);
+
+        DataLayer::Orders searchOrder(QString str);
+        DataLayer::Books searchBook(QString str);
+
+        bool addBook(QString title, QString author, QString genre,
                      QString publisher, QString year, QString price);
-        void addArrival(QString title, QString count);
+        bool addOrder(QString number, QString address, QString sum, QTableWidget* comboBook);
+        bool addEmployee(std::shared_ptr<jp::Employee> employee);
+        bool addClient(std::string name, std::string number);
+        bool addArrival(QString title, QString count);
+        bool addPublisher(std::shared_ptr<jp::Publisher> publisher);
+        bool addAuthor(std::shared_ptr<jp::Author> author);
+        bool addGenre(std::shared_ptr<jp::Genre> genre);
+
+
+        bool changeBook(std::shared_ptr<jp::Book> book);
+        bool changeOrder(std::shared_ptr<jp::Order> order, int status);
+        bool changeEmployee(std::shared_ptr<jp::Employee> employee);
+        bool changePublisher(std::shared_ptr<jp::Publisher> publisher);
+        bool changeAuthor(std::shared_ptr<jp::Author> author);
+        bool changeGenre(std::shared_ptr<jp::Genre> genre);
+
+        std::vector<float> getSales();
+        std::vector<std::pair<std::string, int>> getTopBook();
+        std::vector<std::pair<std::string, int>> getTopBookMonth();
+        std::vector<std::pair<std::string, int>> getTopClient();
+        bool reportSales(std::string& path);
+        bool reportSellingBooks(std::string& path);
+        bool reportSellingBooksMonth(std::string& path);
+        bool reportClient(std::string& path);
 
     private:
-        MainWindow& window_;
-        AddOrderWindow& ow_;
-        AddBookWindow& bw_;
-        AddArrivalWindow& aw_;
-        QSqlDatabase& db_;
-        jp::BloomFilter bf_;
-        jp::BloomFilter bfb_;
+        QSqlDatabase&     db_;
+        DataLayer data_layer_;
+        std::shared_ptr<jp::Employee> authorized_employee_;
     };
-
-
 }
 
 #endif

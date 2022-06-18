@@ -9,6 +9,7 @@ namespace jp
 {
     struct Author
     {
+        int id;
         std::string name;
 
         friend bool operator==(const std::shared_ptr<jp::Author>& lhs, const std::string& rhs)
@@ -20,6 +21,7 @@ namespace jp
 
     struct Genre
     {
+        int id;
         std::string name;
 
         friend bool operator==(const std::shared_ptr<jp::Genre>& lhs, const std::string& rhs)
@@ -31,6 +33,7 @@ namespace jp
 
     struct Publisher
     {
+        int id;
         std::string name;
 
         friend bool operator==(const std::shared_ptr<jp::Publisher>& lhs, const std::string& rhs)
@@ -94,6 +97,17 @@ namespace jp
     struct Employee
     {
         int id;
+        std::string firstName;
+        std::string surname;
+        std::string patronymic;
+        std::string login;
+        std::string password;
+        int role;
+        bool isActive;
+        friend bool operator==(const std::shared_ptr<jp::Employee>& lhs, const std::string& rhs)
+        {
+            return lhs->login == rhs;
+        }
     };
 
 
@@ -120,5 +134,12 @@ namespace jp
 }
 
 Q_DECLARE_METATYPE(std::shared_ptr<jp::Book>);
-Q_DECLARE_METATYPE(jp::Book);
 Q_DECLARE_METATYPE(std::shared_ptr<jp::Order>);
+Q_DECLARE_METATYPE(std::shared_ptr<jp::Employee>);
+Q_DECLARE_METATYPE(std::shared_ptr<jp::Publisher>);
+Q_DECLARE_METATYPE(std::shared_ptr<jp::Author>);
+Q_DECLARE_METATYPE(std::shared_ptr<jp::Genre>);
+Q_DECLARE_METATYPE(jp::Book);
+Q_DECLARE_METATYPE(jp::Publisher);
+Q_DECLARE_METATYPE(jp::Author);
+Q_DECLARE_METATYPE(jp::Genre);

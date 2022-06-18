@@ -10,17 +10,50 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>400</height>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Добавление заказа</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/add.png</normaloff>../icons/add.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0">
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Убедитесь, что все данные введены верно</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Сумма заказа составила: </string>
        </property>
@@ -28,6 +61,11 @@
      </item>
      <item>
       <widget class="QLabel" name="sum">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>0</string>
        </property>
@@ -48,7 +86,7 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="0">
+   <item row="2" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLineEdit" name="lineNumber">
@@ -58,8 +96,28 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="inputMask">
+        <string/>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="maxLength">
+        <number>18</number>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>Введите номер клиента...</string>
@@ -74,6 +132,17 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Новый клиент</string>
        </property>
@@ -81,10 +150,21 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="5" column="1">
     <layout class="QVBoxLayout" name="verticalLayout_1">
      <item>
       <widget class="QComboBox" name="comboBook">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="editable">
         <bool>true</bool>
        </property>
@@ -110,6 +190,11 @@
          <height>120</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <column>
         <property name="text">
          <string>Книга</string>
@@ -134,16 +219,37 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0">
+   <item row="6" column="1">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QLineEdit" name="lineAddress">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="placeholderText">
         <string>Введите адрес..</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="1" column="1">
+    <widget class="Line" name="line">
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

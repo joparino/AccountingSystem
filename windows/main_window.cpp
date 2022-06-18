@@ -6,13 +6,19 @@
 #include "main_window.h"
 
 
-MainWindow::MainWindow(OrderWindow& ow, AddOrderWindow& aow, AddBookWindow& abw, AddArrivalWindow& aw, QWidget *parent)
+MainWindow::MainWindow(OrderWindow& ow, AddOrderWindow& aow, AddBookWindow& abw,
+                       AddArrivalWindow& aw, SalesThreeMonths& s, TopSellingBooks& sb,
+                       TopSellingBooksMonth& sbw, TopClient& tc, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       ow_(ow),
       aow_(aow),
       abw_(abw),
-      aw_(aw)
+      aw_(aw),
+      sales_(s),
+      selling_books_(sb),
+      selling_books_month_(sbw),
+      top_client(tc)
 {
     ui->setupUi(this);
 
@@ -53,6 +59,13 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::logout()
+{
+    this->hide();
+    emit logoutTriggered();
+}
+
+
 void MainWindow::searchOrder()
 {
     emit searchOrderTriggered(ui->searchOrder->text());
@@ -62,6 +75,12 @@ void MainWindow::searchOrder()
 void MainWindow::searchBook()
 {
     emit searchBookTriggered(ui->searchBook->text());
+}
+
+
+void MainWindow::filter()
+{
+    emit filterTriggered(ui->comboStatus->currentIndex() + 1);
 }
 
 
@@ -85,15 +104,89 @@ void MainWindow::goToAddBookWindow()
 }
 
 
+void MainWindow::goToBookWindow()
+{
+    int index = ui->tableBookWidget->currentRow();
+    abw_.setBook(ui->tableBookWidget->item(index, 0)->data(Qt::UserRole).value<std::shared_ptr<jp::Book>>());
+    abw_.exec();
+}
+
+
 void MainWindow::goToAddArrivalWindow()
 {
     aw_.exec();
 }
 
 
-// Добавление строки с данными о заказе в таблицу
-void MainWindow::addRowOrder(std::shared_ptr<jp::Order>& order) noexcept
+void MainWindow::goToSales()
 {
+    sales_.exec();
+}
+
+
+void MainWindow::goToTopSelling()
+{
+    selling_books_.exec();
+}
+
+
+void MainWindow::goToTopSellingMonth()
+{
+    selling_books_month_.exec();
+}
+
+
+void MainWindow::goToTopClient()
+{
+    top_client.exec();
+}
+
+
+void MainWindow::exportTopSales()
+{
+    QString path = QFileDialog::getOpenFileName(
+        this,
+        "Открыть файл...",  "/home",
+        "Excel-файлы (*.xlsx *xls)");
+
+    emit exportTopSalesTriggered(path.toStdString());
+}
+
+void MainWindow::exportTopSelling()
+{
+    QString path = QFileDialog::getOpenFileName(
+        this,
+        "Открыть файл...",  "/home",
+        "Excel-файлы (*.xlsx *xls)");
+    emit exportTopSellingTriggered(path.toStdString());
+}
+
+
+void MainWindow::exportTopSellingMonth()
+{
+    QString path = QFileDialog::getOpenFileName(
+        this,
+        "Открыть файл...",  "/home",
+        "Excel-файлы (*.xlsx *xls)");
+
+    emit exportTopSellingMonthTriggered(path.toStdString());
+}
+
+
+void MainWindow::exportTopClient()
+{
+    QString path = QFileDialog::getOpenFileName(
+        this,
+        "Открыть файл...",  "/home",
+        "Excel-файлы (*.xlsx *xls)");
+    emit exportTopClientTriggered(path.toStdString());
+}
+
+
+// Добавление строки с данными о заказе в таблицу
+void MainWindow::addRowOrder(const std::shared_ptr<jp::Order>& order) noexcept
+{
+
     QTableWidgetItem* client_ = new QTableWidgetItem;
     client_->setText(QString::fromStdString(order->client->name));
 
@@ -109,27 +202,28 @@ void MainWindow::addRowOrder(std::shared_ptr<jp::Order>& order) noexcept
     QTableWidgetItem* sum_ = new QTableWidgetItem;
     sum_->setText(QString::number(order->sum));
 
-    ui->tableOrderWidget->insertRow(0);
-    ui->tableOrderWidget->setItem(0, 0, client_);
-    ui->tableOrderWidget->item(0, 0)->setData(Qt::UserRole, QVariant::fromValue(order));
-    ui->tableOrderWidget->item(0, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableOrderWidget->insertRow(ui->tableOrderWidget->rowCount());
+    int row = ui->tableOrderWidget->rowCount() - 1;
+    ui->tableOrderWidget->setItem(row, 0, client_);
+    ui->tableOrderWidget->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(order));
+    ui->tableOrderWidget->item(row, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableOrderWidget->setItem(0, 1, adress_);
-    ui->tableOrderWidget->item(0, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableOrderWidget->setItem(row, 1, adress_);
+    ui->tableOrderWidget->item(row, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableOrderWidget->setItem(0, 2, status_);
-    ui->tableOrderWidget->item(0, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableOrderWidget->setItem(row, 2, status_);
+    ui->tableOrderWidget->item(row, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableOrderWidget->setItem(0, 3, date_);
-    ui->tableOrderWidget->item(0, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableOrderWidget->setItem(row, 3, date_);
+    ui->tableOrderWidget->item(row, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableOrderWidget->setItem(0, 4, sum_);
-    ui->tableOrderWidget->item(0, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableOrderWidget->setItem(row, 4, sum_);
+    ui->tableOrderWidget->item(row, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 }
 
 
 // Добавление строки с данными о книгах в таблицу
-void MainWindow::addRowBook(std::shared_ptr<jp::Book>& book) noexcept
+void MainWindow::addRowBook(const std::shared_ptr<jp::Book>& book) noexcept
 {
     QTableWidgetItem* book_ = new QTableWidgetItem;
     book_->setText(QString::fromStdString(book->title));
@@ -152,27 +246,29 @@ void MainWindow::addRowBook(std::shared_ptr<jp::Book>& book) noexcept
     QTableWidgetItem* count_ = new QTableWidgetItem;
     count_->setText(QString::number(book->count));
 
-    ui->tableBookWidget->insertRow(0);
-    ui->tableBookWidget->setItem(0, 0, book_);
-    ui->tableBookWidget->item(0, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->insertRow(ui->tableBookWidget->rowCount());
+    int row = ui->tableBookWidget->rowCount() - 1;
+    ui->tableBookWidget->setItem(row, 0, book_);
+    ui->tableBookWidget->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(book));
+    ui->tableBookWidget->item(row, 0)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 1, author_);
-    ui->tableBookWidget->item(0, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 1, author_);
+    ui->tableBookWidget->item(row, 1)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 2, genre_);
-    ui->tableBookWidget->item(0, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 2, genre_);
+    ui->tableBookWidget->item(row, 2)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 3, publisher_);
-    ui->tableBookWidget->item(0, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 3, publisher_);
+    ui->tableBookWidget->item(row, 3)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 4, year_);
-    ui->tableBookWidget->item(0, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 4, year_);
+    ui->tableBookWidget->item(row, 4)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 5, price_);
-    ui->tableBookWidget->item(0, 5)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 5, price_);
+    ui->tableBookWidget->item(row, 5)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-    ui->tableBookWidget->setItem(0, 6, count_);
-    ui->tableBookWidget->item(0, 6)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    ui->tableBookWidget->setItem(row, 6, count_);
+    ui->tableBookWidget->item(row, 6)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 }
 
 

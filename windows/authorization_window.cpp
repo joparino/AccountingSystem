@@ -1,4 +1,5 @@
 #include "authorization_window.h"
+#include "qmessagebox.h"
 #include "ui_authorization_window.h"
 
 AuthorizationWindow::AuthorizationWindow(QWidget *parent) :
@@ -15,5 +16,27 @@ AuthorizationWindow::~AuthorizationWindow()
 
 void AuthorizationWindow::authorization()
 {
-    emit authorizationTriggered(ui->lineLogin->text().toStdString(), ui->linePassword->text().toStdString());
+    if (!ui->lineLogin->text().isEmpty() && !ui->linePassword->text().isEmpty())
+    {
+        emit authorizationTriggered(ui->lineLogin->text().toStdString(), ui->linePassword->text().toStdString());
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не все поля заполнены");
+    }
+}
+
+
+void AuthorizationWindow::hide()
+{
+   ui->lineLogin->setText("");
+   ui->linePassword->setText("");
+   AuthorizationWindow::setVisible(false);
+}
+
+
+void AuthorizationWindow::reject()
+{
+    AuthorizationWindow::close();
+    qApp->quit();
 }

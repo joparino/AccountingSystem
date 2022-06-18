@@ -1,5 +1,6 @@
 #include "add_client_window.h"
 #include "qmessagebox.h"
+#include "qpushbutton.h"
 #include "ui_add_client_window.h"
 
 AddClientWindow::AddClientWindow(QWidget *parent) :
@@ -7,6 +8,11 @@ AddClientWindow::AddClientWindow(QWidget *parent) :
     ui(new Ui::AddClientWindow)
 {
     ui->setupUi(this);
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Добавить");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setMinimumSize(0, 30);
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setMinimumSize(0, 30);
 }
 
 AddClientWindow::~AddClientWindow()

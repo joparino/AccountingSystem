@@ -20,7 +20,9 @@ AddOrderWindow::AddOrderWindow(AddClientWindow& acw, QWidget *parent) :
     ui->tableBookOrder->setVisible(false);
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Добавить");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setMinimumSize(0, 30);
     ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setMinimumSize(0, 30);
 }
 
 AddOrderWindow::~AddOrderWindow()
@@ -31,7 +33,10 @@ AddOrderWindow::~AddOrderWindow()
 
 void AddOrderWindow::addTitleBook(std::string title, std::shared_ptr<jp::Book> bookData)
 {
-    ui->comboBook->addItem(QString::fromStdString(title), QVariant::fromValue(bookData));
+    if (bookData->count != 0)
+    {
+       ui->comboBook->addItem(QString::fromStdString(title), QVariant::fromValue(bookData));
+    }
 }
 
 
@@ -128,13 +133,11 @@ void AddOrderWindow::accept()
         && ui->tableBookOrder->rowCount() > 0)
     {
         emit addOrder(ui->lineNumber->text(), ui->lineAddress->text(), ui->sum->text(), ui->tableBookOrder);
-        AddOrderWindow::reject();
     }
     else
     {
         QMessageBox::critical(this, "Не заполнены поля", "Пожалуйста заполните все поля");
     }
-
 }
 
 

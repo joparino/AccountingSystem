@@ -16,6 +16,7 @@ public:
     explicit AddArrivalWindow(QWidget *parent = nullptr);
     ~AddArrivalWindow();
     void addItemBook(QString title);
+    void clear();
 
 public slots:
     void addArrival();

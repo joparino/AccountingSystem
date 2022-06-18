@@ -1,3 +1,4 @@
+
 #ifndef AUTHORIZATION_WINDOW_H
 #define AUTHORIZATION_WINDOW_H
 
@@ -19,6 +20,10 @@ public:
 private slots:
     void authorization();
 
+public slots:
+    void hide();
+    void reject();
+
 signals:
     void authorizationTriggered(std::string login, std::string password);
 
@@ -26,4 +31,4 @@ private:
     Ui::AuthorizationWindow *ui;
 };
 
-#endif // AUTHORIZATION_WINDOW_H
+#endif

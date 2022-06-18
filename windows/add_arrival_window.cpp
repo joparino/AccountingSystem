@@ -2,6 +2,7 @@
 #include "add_arrival_window.h"
 #include "qlineedit.h"
 #include "qmessagebox.h"
+#include "qpushbutton.h"
 #include "ui_add_arrival_window.h"
 
 AddArrivalWindow::AddArrivalWindow(QWidget *parent) :
@@ -11,6 +12,11 @@ AddArrivalWindow::AddArrivalWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->comboBook->lineEdit()->setPlaceholderText("Выберите книгу...");
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Добавить");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setMinimumSize(0, 30);
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setMinimumSize(0, 30);
 }
 
 AddArrivalWindow::~AddArrivalWindow()
@@ -43,4 +49,10 @@ void AddArrivalWindow::reject()
 void AddArrivalWindow::addItemBook(QString title)
 {
     ui->comboBook->addItem(title);
+}
+
+
+void AddArrivalWindow::clear()
+{
+    ui->comboBook->clear();
 }

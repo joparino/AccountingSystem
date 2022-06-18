@@ -11,6 +11,11 @@ OrderWindow::OrderWindow(QWidget *parent) :
     ui->tableBook->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     ui->tableBook->verticalHeader()->hide();
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сохранить");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setMinimumSize(0, 30);
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setMinimumSize(0, 30);
 }
 
 OrderWindow::~OrderWindow()
@@ -38,6 +43,7 @@ void OrderWindow::add(std::shared_ptr<jp::Order> order)
     ui->lineClient->setText(QString::fromStdString(order_->client->name));
     ui->lineAddress->setText(QString::fromStdString(order_->address));
     ui->comboStatus->setCurrentIndex(order_->status->id - 1);
+    ui->sum->setText(QString::number(order->sum));
 
     for (auto& book : order_->books)
     {
@@ -49,7 +55,6 @@ void OrderWindow::add(std::shared_ptr<jp::Order> order)
 
         QTableWidgetItem* price_ = new QTableWidgetItem;
         price_->setText(QString::number(book.price));
-        ui->sum->setText(QString::number(ui->sum->text().toInt() + book.price));
 
         QTableWidgetItem* count_ = new QTableWidgetItem;
         count_->setText(QString::number(book.count));
@@ -72,21 +77,18 @@ void OrderWindow::add(std::shared_ptr<jp::Order> order)
     if (order_->status->id == 1)
     {
         ui->lineAddress->setEnabled(false);
-        ui->tableBook->setEnabled(false);
     }
-    else if (order_->status->id == 2 && order_->status->id == 5)
+    else if (order_->status->id == 2 || order_->status->id == 5)
     {
         ui->lineNumber->setEnabled(false);
         ui->lineClient->setEnabled(false);
         ui->lineAddress->setEnabled(false);
-        ui->tableBook->setEnabled(false);
     }
     else
     {
         ui->lineNumber->setEnabled(true);
         ui->lineClient->setEnabled(true);
         ui->lineAddress->setEnabled(true);
-        ui->tableBook->setEnabled(false);
     }
 }
 
@@ -105,8 +107,6 @@ void OrderWindow::accept()
         order_->client->phoneNumber = clientNumber;
         emit hasOrderChangedTriggered(order_, status);
     }
-
-    OrderWindow::reject();
 }
 
 

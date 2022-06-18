@@ -3,6 +3,7 @@
 #define ADD_BOOK_WINDOW_H
 
 #include <QDialog>
+#include "entities/models.h"
 
 namespace Ui {
 class AddBookWindow;
@@ -15,9 +16,11 @@ class AddBookWindow : public QDialog
 public:
     explicit AddBookWindow(QWidget *parent = nullptr);
     ~AddBookWindow();
-    void addItemAuthor(QString author);
-    void addItemPublisher(QString publisher);
-    void addItemGenre(QString genre);
+    void addItemAuthor(std::shared_ptr<jp::Author> author);
+    void addItemPublisher(std::shared_ptr<jp::Publisher> publisher);
+    void addItemGenre(std::shared_ptr<jp::Genre> genre);
+    void setBook(std::shared_ptr<jp::Book> book);
+    void clear();
 
 public slots:
     void addBook();
@@ -26,9 +29,11 @@ public slots:
 signals:
     void addBookTriggered(QString title, QString author, QString genre,
                           QString publisher, QString year, QString price);
+    void changeBookTriggered(std::shared_ptr<jp::Book> book);
 
 private:
     Ui::AddBookWindow *ui;
+    std::shared_ptr<jp::Book> book_;
 };
 
 #endif

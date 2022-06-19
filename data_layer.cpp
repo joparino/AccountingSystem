@@ -41,7 +41,7 @@ jp::DataLayer::DataLayer(QSqlDatabase& db):
     };
 
     QSqlQuery queryClient(db_);
-    queryClient.exec( "SELECT id, name, phone_number FROM client");
+    queryClient.exec( "SELECT * FROM client");
 
     while (queryClient.next())
     {
@@ -84,9 +84,9 @@ jp::DataLayer::DataLayer(QSqlDatabase& db):
 
     QSqlQuery queryBook(db_);
     queryBook.exec( "SELECT book.id, title, author.name_of_author, genre.name_of_genre, publisher.name_of_publisher, year, price, count FROM book\
-                    JOIN author ON author.id = Book.id_author\
-                    JOIN genre ON genre.id = Book.id_genre\
-                    JOIN publisher ON publisher.id = Book.id_publisher");
+                    JOIN author ON author.id = book.id_author\
+                    JOIN genre ON genre.id = book.id_genre\
+                    JOIN publisher ON publisher.id = book.id_publisher");
 
     while (queryBook.next())
     {
@@ -113,13 +113,13 @@ jp::DataLayer::DataLayer(QSqlDatabase& db):
     }
 
     QSqlQuery queryOrder(db_);
-    queryOrder.exec( "SELECT Purschase.id, Client.phoneNumber, Employee.id, STRING_AGG(Book.title, ', '), Purschase.address, Status.type, Purschase.date, Purschase.sum FROM Purschase\
-                     JOIN Client ON Client.id = Purschase.id_client\
-                     JOIN Employee ON Employee.id = Purschase.id_employee\
-                     JOIN Status ON Status.id = Purschase.id_status\
-                     JOIN Basket ON Basket.id_purschase = Purschase.id\
-                     JOIN Book ON Book.id = Basket.id_book\
-                     GROUP BY Purschase.id, Client.phoneNumber, Employee.id, Purschase.address, Status.type, Purschase.date, Purschase.sum");
+    queryOrder.exec( "SELECT purschase.id, client.phone_number, employee.id, STRING_AGG(book.title, ', '), purschase.address, status.type, purschase.date, purschase.sum FROM purschase\
+                     JOIN Client ON Client.id = purschase.id_client\
+                     JOIN employee ON employee.id = purschase.id_employee\
+                     JOIN status ON status.id = purschase.id_status\
+                     JOIN basket ON basket.id_purschase = purschase.id\
+                     JOIN book ON book.id = Basket.id_book\
+                     GROUP BY purschase.id, Client.phone_number, employee.id, purschase.address, status.type, purschase.date, purschase.sum");
 
     while (queryOrder.next())
     {
@@ -132,7 +132,7 @@ jp::DataLayer::DataLayer(QSqlDatabase& db):
                                                  queryOrder.value(5).toString().toStdString());
 
         QSqlQuery queryBasket(db_);
-        queryBasket.prepare("SELECT id_book, salePrice, count FROM Basket WHERE id_purschase = :id");
+        queryBasket.prepare("SELECT id_book, sale_price, count FROM basket WHERE id_purschase = :id");
         queryBasket.bindValue(":id", queryOrder.value(0).toInt());
         queryBasket.exec();
         while (queryBasket.next())

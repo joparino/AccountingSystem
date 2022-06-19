@@ -21,7 +21,7 @@ jp::Controller::Controller(QSqlDatabase& db):
 int jp::Controller::authorization(std::string login, std::string password)
 {
     QSqlQuery queryAuthorization(db_);
-    queryAuthorization.prepare("SELECT role, password FROM Employee\
+    queryAuthorization.prepare("SELECT role, password FROM employee\
                                 WHERE login = :login");
     queryAuthorization.bindValue(":login", QString::fromStdString(login));
     queryAuthorization.exec();
@@ -33,7 +33,7 @@ int jp::Controller::authorization(std::string login, std::string password)
     {
         if (password == queryAuthorization.value(1).toString().toStdString())
         {
-            if (queryAuthorization.value(0).toString().toInt() == 1)
+            if (queryAuthorization.value(0).toBool() == true)
             {
                 authorized_employee_ = *employee;
                 return 1;
@@ -84,45 +84,20 @@ jp::DataLayer::Books jp::Controller::searchBook(QString str)
 }
 
 
-bool jp::Controller::addBook(QString title, QString author, QString genre,
-                             QString publisher, QString year, QString price)
+bool jp::Controller::addBook(std::shared_ptr<jp::Book> book)
 {
     QSqlQuery queryAddBook(db_);
-    queryAddBook.prepare("DECLARE @AuthorID int\
-                        DECLARE @GenreID int\
-                        DECLARE @PublisherID int\
-                        set @AuthorID = (SELECT id FROM Author Where nameOfAuthor = :author)\
-                        set @GenreID = (SELECT id FROM Genre Where nameOfGenre = :genre)\
-                        set @PublisherID = (SELECT id FROM Publisher Where nameOfPublisher = :publisher)\
-                        INSERT Book VALUES (:title, @AuthorID, @GenreID, @PublisherID, :year, :price, '0')");
-    queryAddBook.bindValue(":title", title);
-    queryAddBook.bindValue(":author", author);
-    queryAddBook.bindValue(":genre", genre);
-    queryAddBook.bindValue(":publisher", publisher);
-    queryAddBook.bindValue(":year", year);
-    queryAddBook.bindValue(":price", price);
+    queryAddBook.prepare("INSERT INTO book (title, id_author, id_genre, id_publisher, year, price, count)\
+                          VALUES (:title, :id_author, :id_genre, id_publisher, :year, :price, '0')");
+    queryAddBook.bindValue(":title", QString::fromStdString(book->title));
+    queryAddBook.bindValue(":id_author", book->author->id);
+    queryAddBook.bindValue(":id_genre", book->genre->id);
+    queryAddBook.bindValue(":id_publisher", book->publisher->id);
+    queryAddBook.bindValue(":year", QString::fromStdString(book->year));
+    queryAddBook.bindValue(":price", book->price);
 
     if (queryAddBook.exec())
     {
-        std::shared_ptr<jp::Book> book(new jp::Book);
-
-        DataLayer::Authors::iterator authorFound = std::find(data_layer_.authors_.begin(),
-                                                             data_layer_.authors_.end(),
-                                                             author.toStdString());
-        DataLayer::Genres::iterator genreFound = std::find(data_layer_.genres_.begin(),
-                                                           data_layer_.genres_.end(),
-                                                           genre.toStdString());
-        DataLayer::Publishers::iterator publisherFound = std::find(data_layer_.publishers_.begin(),
-                                                                   data_layer_.publishers_.end(),
-                                                                   publisher.toStdString());
-
-        book->title = title.toStdString();
-        book->author = *authorFound;
-        book->genre = *genreFound;
-        book->publisher = *publisherFound;
-        book->year = year.toStdString();
-        book->price = price.toFloat();
-        book->count = 0;
         data_layer_.books_.push_back(book);
         data_layer_.bfb_.insert(book->title.c_str());
 
@@ -132,81 +107,83 @@ bool jp::Controller::addBook(QString title, QString author, QString genre,
 }
 
 
-bool jp::Controller::addOrder(QString number, QString address, QString sum, QTableWidget* comboBook)
+bool jp::Controller::addOrder(QString number, QString address, QString sum, QTableWidget* tableBook)
 {
-    QSqlQuery queryAddPurchase(db_);
-    queryAddPurchase.prepare("DECLARE @ClientID int\
-                             set @ClientID = (SELECT id FROM Client Where phoneNumber = :number)\
-                             INSERT Purschase VALUES (:idEmployee, @ClientID, 1, :address, :date, :sum)\
-                             SELECT @@identity");
-    queryAddPurchase.bindValue(":idEmployee", authorized_employee_->id);
-    queryAddPurchase.bindValue(":number", number);
-    queryAddPurchase.bindValue(":address", address);
-    queryAddPurchase.bindValue(":date", QDate::currentDate().toString("dd.MM.yyyy"));
-    queryAddPurchase.bindValue(":sum", sum);
-
-    if (queryAddPurchase.exec())
+    DataLayer::Clients::iterator clientFound  = std::find(data_layer_.clients_.begin(), data_layer_.clients_.end(),
+                                                          number.toStdString());
+    if (clientFound != data_layer_.clients_.end())
     {
-        QString idPurchase = "";
-        while(queryAddPurchase.next())
+        QSqlQuery queryAddPurchase(db_);
+        queryAddPurchase.prepare("INSERT INTO purschase (id_employee, id_client, id_status, address, date, sum)\
+                                 VALUES (:id_employee, :id_client, 4, :address, :date, :sum)\
+                                 RETURNING id");
+        queryAddPurchase.bindValue(":id_employee", authorized_employee_->id);
+        queryAddPurchase.bindValue(":id_client", (*clientFound)->id);
+        queryAddPurchase.bindValue(":address", address);
+        queryAddPurchase.bindValue(":date", QDate::currentDate().toString("dd.MM.yyyy"));
+        queryAddPurchase.bindValue(":sum", sum);
+
+        if (queryAddPurchase.exec())
         {
-            idPurchase = queryAddPurchase.value(0).toString();
-        }
-
-        DataLayer::Clients::iterator client  = std::find(data_layer_.clients_.begin(), data_layer_.clients_.end(),
-                                                         number.toStdString());
-        DataLayer::Statuses::iterator status = std::find(data_layer_.statuses_.begin(), data_layer_.statuses_.end(),
-                                                         4);
-
-        std::shared_ptr<jp::Order> order(new jp::Order);
-
-        order->id = idPurchase.toInt();
-        order->client = *client;
-        order->status = *status;
-        order->employee = 1;
-        order->address = address.toStdString();
-        order->date = QDate::currentDate().toString("dd.MM.yyyy").toStdString();
-        order->sum = sum.toFloat();
-
-        for (size_t i = 0; i < comboBook->rowCount(); ++i)
-        {
-            QSpinBox* count = qobject_cast<QSpinBox*>(comboBook->cellWidget(i, 2));
-
-            QSqlQuery queryAddInBasket(db_);
-            queryAddInBasket.prepare("DECLARE @BookID int\
-                                     set @BookID = (SELECT id FROM Book Where title = :title)\
-                                     INSERT Basket VALUES (@BookID, :idPurchase, :count, :price)");
-            queryAddInBasket.bindValue(":title", comboBook->item(i, 0)->text());
-            queryAddInBasket.bindValue(":count", count->text());
-            queryAddInBasket.bindValue(":idPurchase", idPurchase);
-            queryAddInBasket.bindValue(":price", comboBook->item(i, 1)->text());
-            if (!queryAddInBasket.exec())
+            QString idPurchase = "";
+            while(queryAddPurchase.next())
             {
-                return false;
+                idPurchase = queryAddPurchase.value(0).toString();
             }
 
-            QSqlQuery queryCountBook(db_);
-            queryCountBook.prepare("DECLARE @BookID int\
-                                    set @BookID = (SELECT id FROM Book Where title = :title)\
-                                    UPDATE Book SET count = count - :count WHERE id = @BookID");
-            queryCountBook.bindValue(":title", comboBook->item(i, 0)->text());
-            queryCountBook.bindValue(":count", count->text());
-            if (!queryCountBook.exec())
+            DataLayer::Statuses::iterator status = std::find(data_layer_.statuses_.begin(), data_layer_.statuses_.end(),
+                                                             4);
+
+            std::shared_ptr<jp::Order> order(new jp::Order);
+
+            order->id = idPurchase.toInt();
+            order->client = *clientFound;
+            order->status = *status;
+            order->employee = authorized_employee_->id;
+            order->address = address.toStdString();
+            order->date = QDate::currentDate().toString("dd.MM.yyyy").toStdString();
+            order->sum = sum.toFloat();
+
+            for (size_t i = 0; i < tableBook->rowCount(); ++i)
             {
-                return false;
+                QSpinBox* count = qobject_cast<QSpinBox*>(tableBook->cellWidget(i, 2));
+                std::shared_ptr<jp::Book> book = tableBook->item(i, 0)->data(Qt::UserRole).value<std::shared_ptr<jp::Book>>();
+
+
+                QSqlQuery queryAddInBasket(db_);
+                queryAddInBasket.prepare("INSERT INTO Basket (id_book, id_purschase, count, sale_price)\
+                                          VALUES (:id, :id_purchase, :count, :price)");
+                queryAddInBasket.bindValue(":id", book->id);
+                queryAddInBasket.bindValue(":title", QString::fromStdString(book->title));
+                queryAddInBasket.bindValue(":count", count->text());
+                queryAddInBasket.bindValue(":id_purchase", idPurchase);
+                queryAddInBasket.bindValue(":price", tableBook->item(i, 1)->text());
+                if (!queryAddInBasket.exec())
+                {
+                    return false;
+                }
+
+                QSqlQuery queryCountBook(db_);
+                queryCountBook.prepare("UPDATE Book SET count = count - :count WHERE id = :id");
+                queryCountBook.bindValue(":id", book->id);
+                queryCountBook.bindValue(":title", tableBook->item(i, 0)->text());
+                queryCountBook.bindValue(":count", count->text());
+                if (!queryCountBook.exec())
+                {
+                    return false;
+                }
+
+                jp::Book bookFound = *book;
+                bookFound.count = count->text().toInt();
+                book->count -= count->text().toInt();
+                order->books.push_back(bookFound);
             }
 
-            DataLayer::Books::iterator book = std::find(data_layer_.books_.begin(), data_layer_.books_.end(),
-                                                        comboBook->item(i, 0)->text().toStdString());
-            jp::Book bookFound = **book;
-            bookFound.count = count->text().toInt();
-            order->books.push_back(bookFound);
+            data_layer_.orders_.push_back(order);
+            data_layer_.bf_.insert(order->client->name.c_str());
+
+            return true;
         }
-
-        data_layer_.orders_.push_back(order);
-        data_layer_.bf_.insert(order->client->name.c_str());
-
-        return true;
     }
     return false;
 }
@@ -215,8 +192,9 @@ bool jp::Controller::addOrder(QString number, QString address, QString sum, QTab
 bool jp::Controller::addEmployee(std::shared_ptr<jp::Employee> employee)
 {
     QSqlQuery queryAddEmployee(db_);
-    queryAddEmployee.prepare("INSERT Employee VALUES (:firstName, :surname, :patronymic,\
-                                                      :login, :password, :role, :isActive)");
+    queryAddEmployee.prepare("INSERT INTO employee (first_name, surname, patronymic, login, password, role, is_active)\
+                              VALUES (:firstName, :surname, :patronymic,\
+                                      :login, :password, :role, :isActive)");
     queryAddEmployee.bindValue(":firstName", QString::fromStdString(employee->firstName));
     queryAddEmployee.bindValue(":surname", QString::fromStdString(employee->surname));
     queryAddEmployee.bindValue(":patronymic", QString::fromStdString(employee->patronymic));
@@ -240,49 +218,46 @@ bool jp::Controller::addClient(std::string name, std::string number)
 {
     DataLayer::Clients::iterator clientFound  = std::find(data_layer_.clients_.begin(), data_layer_.clients_.end(),
                                                           number);
-    if (clientFound._Ptr->_Myval == nullptr)
+    if (clientFound == data_layer_.clients_.end())
     {
         QSqlQuery queryAddClient(db_);
-        queryAddClient.prepare("INSERT Client VALUES (:name, :number)\
-                                SELECT @@identity");
+        queryAddClient.prepare("INSERT INTO client (name, phone_number) VALUES (:name, :number)\
+                                RETURNING id");
         queryAddClient.bindValue(":name", QString::fromStdString(name));
         queryAddClient.bindValue(":number", QString::fromStdString(number));
 
         if (queryAddClient.exec())
         {
-            QString idClient = "";
+            int idClient = 0;
             while(queryAddClient.next())
             {
-                idClient = queryAddClient.value(0).toString();
+                idClient = queryAddClient.value(0).toInt();
             }
-
-            jp::Client client;
-            client.id = idClient.toInt();
-            client.name = name;
-            client.phoneNumber = number;
-            data_layer_.clients_.push_back(std::make_shared<jp::Client>(client));
-            return true;
+            if (idClient != 0)
+            {
+                jp::Client client;
+                client.id = idClient;
+                client.name = name;
+                client.phoneNumber = number;
+                data_layer_.clients_.push_back(std::make_shared<jp::Client>(client));
+                return true;
+            }
         }
     }
     return false;
 }
 
 
-bool jp::Controller::addArrival(QString title, QString count)
+bool jp::Controller::addArrival(std::shared_ptr<jp::Book> book, QString count)
 {
     QSqlQuery queryAddArrival(db_);
-    queryAddArrival.prepare("DECLARE @BookID int\
-                            set @BookID = (SELECT id FROM Book Where title = :title)\
-                            UPDATE Book SET count = count + :count WHERE id = @BookID");
-    queryAddArrival.bindValue(":title", title);
+    queryAddArrival.prepare("UPDATE book SET count = count + :count WHERE id = :id");
+    queryAddArrival.bindValue(":id", book->id);
     queryAddArrival.bindValue(":count", count);
 
     if (queryAddArrival.exec())
     {
-        DataLayer::Books::iterator titleFound = std::find(data_layer_.books_.begin(), data_layer_.books_.end(),
-                                                          title.toStdString());
-        titleFound._Ptr->_Myval->count = titleFound._Ptr->_Myval->count + count.toInt();
-
+        book->count += count.toInt();
         return true;
     }
     return false;
@@ -292,7 +267,7 @@ bool jp::Controller::addArrival(QString title, QString count)
 bool jp::Controller::addPublisher(std::shared_ptr<jp::Publisher> publisher)
 {
     QSqlQuery queryAddPublisher(db_);
-    queryAddPublisher.prepare("INSERT Publisher VALUES (:name)");
+    queryAddPublisher.prepare("INSERT INTO publisher (name_of_publisher) VALUES (:name)");
     queryAddPublisher.bindValue(":name", QString::fromStdString(publisher->name));
     if (queryAddPublisher.exec())
     {
@@ -307,7 +282,7 @@ bool jp::Controller::addPublisher(std::shared_ptr<jp::Publisher> publisher)
 bool jp::Controller::addAuthor(std::shared_ptr<jp::Author> author)
 {
     QSqlQuery queryAddAuthor(db_);
-    queryAddAuthor.prepare("INSERT Author VALUES (:name)");
+    queryAddAuthor.prepare("INSERT INTO author (name_of_author) VALUES (:name)");
     queryAddAuthor.bindValue(":name", QString::fromStdString(author->name));
     if (queryAddAuthor.exec())
     {
@@ -322,7 +297,7 @@ bool jp::Controller::addAuthor(std::shared_ptr<jp::Author> author)
 bool jp::Controller::addGenre(std::shared_ptr<jp::Genre> genre)
 {
     QSqlQuery queryAddGenre(db_);
-    queryAddGenre.prepare("INSERT Genre VALUES (:name)");
+    queryAddGenre.prepare("INSERT INTO genre (name_of_genre) VALUES (:name)");
     queryAddGenre.bindValue(":name", QString::fromStdString(genre->name));
     if (queryAddGenre.exec())
     {
@@ -337,7 +312,7 @@ bool jp::Controller::addGenre(std::shared_ptr<jp::Genre> genre)
 bool jp::Controller::changeBook(std::shared_ptr<jp::Book> book)
 {
     QSqlQuery queryChangeBook(db_);
-    queryChangeBook.prepare("UPDATE Book SET title = :title, id_author = :id_author, id_genre = :id_genre,\
+    queryChangeBook.prepare("UPDATE book SET title = :title, id_author = :id_author, id_genre = :id_genre,\
                              id_publisher = :id_publisher, year = :year, price = :price WHERE id = :id");
     queryChangeBook.bindValue(":id", book->id);
     queryChangeBook.bindValue(":title", QString::fromStdString(book->title));
@@ -361,7 +336,7 @@ bool jp::Controller::changeOrder(std::shared_ptr<jp::Order> order, int status)
     order->status = *statusFound;
 
     QSqlQuery queryChangeClient(db_);
-    queryChangeClient.prepare("UPDATE Client SET name = :name, phoneNumber = :number WHERE id = :id_client");
+    queryChangeClient.prepare("UPDATE сlient SET name = :name, phoneNumber = :number WHERE id = :id_client");
     queryChangeClient.bindValue(":id_client", order->client->id);
     queryChangeClient.bindValue(":name", QString::fromStdString(order->client->name));
     queryChangeClient.bindValue(":number", QString::fromStdString(order->client->phoneNumber));
@@ -369,7 +344,7 @@ bool jp::Controller::changeOrder(std::shared_ptr<jp::Order> order, int status)
     if (queryChangeClient.exec())
     {
         QSqlQuery queryChangeOrder(db_);
-        queryChangeOrder.prepare("UPDATE Purschase SET address = :address, id_status = :status WHERE id = :id_order");
+        queryChangeOrder.prepare("UPDATE purschase SET address = :address, id_status = :status WHERE id = :id_order");
         queryChangeOrder.bindValue(":id_order", order->id);
         queryChangeOrder.bindValue(":address", QString::fromStdString(order->address));
         queryChangeOrder.bindValue(":status", order->status->id);
@@ -387,7 +362,7 @@ bool jp::Controller::changeOrder(std::shared_ptr<jp::Order> order, int status)
 bool jp::Controller::changeEmployee(std::shared_ptr<jp::Employee> employee)
 {
     QSqlQuery queryChangeEmployee(db_);
-    queryChangeEmployee.prepare("UPDATE Employee SET firstName = :firstName, surname = :surname, patronymic = :patronymic,\
+    queryChangeEmployee.prepare("UPDATE employee SET firstName = :firstName, surname = :surname, patronymic = :patronymic,\
                                  login = :login, password = :password, role = :role, isActive = :isActive WHERE id = :id");
     queryChangeEmployee.bindValue(":id", employee->id);
     queryChangeEmployee.bindValue(":firstName", QString::fromStdString(employee->firstName));
@@ -408,7 +383,7 @@ bool jp::Controller::changeEmployee(std::shared_ptr<jp::Employee> employee)
 bool jp::Controller::changePublisher(std::shared_ptr<jp::Publisher> publisher)
 {
     QSqlQuery queryChangePublisher(db_);
-    queryChangePublisher.prepare("UPDATE Publisher SET nameOfPublisher = :name WHERE id = :id");
+    queryChangePublisher.prepare("UPDATE publisher SET name_of_Publisher = :name WHERE id = :id");
     queryChangePublisher.bindValue(":id", publisher->id);
     queryChangePublisher.bindValue(":name", QString::fromStdString(publisher->name));
 
@@ -423,7 +398,7 @@ bool jp::Controller::changePublisher(std::shared_ptr<jp::Publisher> publisher)
 bool jp::Controller::changeAuthor(std::shared_ptr<jp::Author> author)
 {
     QSqlQuery queryChangeAuthor(db_);
-    queryChangeAuthor.prepare("UPDATE Author SET nameOfAuthor = :name WHERE id = :id");
+    queryChangeAuthor.prepare("UPDATE author SET name_of_author = :name WHERE id = :id");
     queryChangeAuthor.bindValue(":id", author->id);
     queryChangeAuthor.bindValue(":name", QString::fromStdString(author->name));
 
@@ -438,7 +413,7 @@ bool jp::Controller::changeAuthor(std::shared_ptr<jp::Author> author)
 bool jp::Controller::changeGenre(std::shared_ptr<jp::Genre> genre)
 {
     QSqlQuery queryChangeGenre(db_);
-    queryChangeGenre.prepare("UPDATE Genre SET nameOfGenre = :name WHERE id = :id");
+    queryChangeGenre.prepare("UPDATE genre SET name_of_genre = :name WHERE id = :id");
     queryChangeGenre.bindValue(":id", genre->id);
     queryChangeGenre.bindValue(":name", QString::fromStdString(genre->name));
 
@@ -464,9 +439,9 @@ std::vector<float> jp::Controller::getSales()
                                    QString::number(firstDate.daysInMonth());
 
     QSqlQuery queryGetFirstSales(db_);
-    queryGetFirstSales.prepare("SELECT Purschase.sum FROM Purschase\
-                                WHERE date >= :date  AND date <=  :secondDate\
-                                AND Purschase.id_status != 5");
+    queryGetFirstSales.prepare("SELECT purschase.sum FROM purschase\
+                                WHERE date >= :date::date  AND date <=  :secondDate::date\
+                                AND purschase.id_status != 5");
     queryGetFirstSales.bindValue(":date", date);
     queryGetFirstSales.bindValue(":secondDate", lastDate);
 
@@ -486,7 +461,7 @@ std::vector<float> jp::Controller::getSales()
 
     QSqlQuery queryGetSecondSales(db_);
     queryGetSecondSales.prepare("SELECT Purschase.sum FROM Purschase\
-                                 WHERE date >= :date  AND date <=  :secondDate\
+                                 WHERE date >= :date::date  AND date <=  :secondDate::date\
                                  AND Purschase.id_status != 5");
     queryGetSecondSales.bindValue(":date", date);
     queryGetSecondSales.bindValue(":secondDate", lastDate);
@@ -507,7 +482,7 @@ std::vector<float> jp::Controller::getSales()
 
     QSqlQuery queryGetThirstSales(db_);
     queryGetThirstSales.prepare("SELECT Purschase.sum FROM Purschase\
-                                 WHERE date >= :date  AND date <=  :secondDate\
+                                 WHERE date >= :date::date  AND date <=  :secondDate::date\
                                  AND Purschase.id_status != 5");
     queryGetThirstSales.bindValue(":date", date);
     queryGetThirstSales.bindValue(":secondDate", lastDate);
@@ -530,10 +505,11 @@ std::vector<std::pair<std::string, int>> jp::Controller::getTopBook()
     std::vector<std::pair<std::string, int>> topBook;
 
     QSqlQuery queryGetTopBook(db_);
-    queryGetTopBook.prepare("SELECT TOP (5) WITH TIES Book.title, SUM(Basket.count) FROM Basket\
-                            JOIN Book ON Book.id = Basket.id_book\
-                            GROUP BY Book.title\
-                            order by SUM(Basket.count) desc");
+    queryGetTopBook.prepare("SELECT book.title, SUM(basket.count) FROM basket\
+                            JOIN book ON book.id = basket.id_book\
+                            GROUP BY book.title\
+                            order by SUM(basket.count) desc\
+                            LIMIT 5");
     if (queryGetTopBook.exec())
     {
         while (queryGetTopBook.next())
@@ -549,14 +525,23 @@ std::vector<std::pair<std::string, int>> jp::Controller::getTopBook()
 std::vector<std::pair<std::string, int>> jp::Controller::getTopBookMonth()
 {
     std::vector<std::pair<std::string, int>> topBook;
+    QDate firstDate = QDate::currentDate();
+    QDate secondDate = firstDate.addMonths(-1);
+
+    QString lastDate = QString::number(firstDate.year()) + "." + QString::number(firstDate.month()) + "." + QString::number(firstDate.day());
+    QString date = QString::number(secondDate.year()) + "." + QString::number(secondDate.month()) + "." +
+                                   QString::number(secondDate.day());
 
     QSqlQuery queryGetTopBook(db_);
-    queryGetTopBook.prepare("SELECT TOP (5) WITH TIES Book.title, SUM(Basket.count) FROM Basket\
-                            JOIN Book ON Book.id = Basket.id_book\
-                            JOIN Purschase ON Purschase.id = Basket.id_purschase\
-                            WHERE Purschase.date >= '2022.5.01'  AND Purschase.date <=  '2022.5.31' AND Purschase.id_status != 5\
-                            GROUP BY Book.title\
-                            order by SUM(Basket.count) desc");
+    queryGetTopBook.prepare("SELECT book.title, SUM(basket.count) FROM basket\
+                            JOIN book ON book.id = basket.id_book\
+                            JOIN purschase ON purschase.id = basket.id_purschase\
+                            WHERE date >= :firstDate::date AND date <= :secondDate::date AND Purschase.id_status != 5\
+                            GROUP BY book.title\
+                            ORDER BY SUM(Basket.count) desc\
+                            LIMIT 5");
+    queryGetTopBook.bindValue(":firstDate", date);
+    queryGetTopBook.bindValue(":secondDate", lastDate);
     if (queryGetTopBook.exec())
     {
         while (queryGetTopBook.next())
@@ -574,11 +559,12 @@ std::vector<std::pair<std::string, int>> jp::Controller::getTopClient()
     std::vector<std::pair<std::string, int>> topClient;
 
     QSqlQuery queryGetTopClient(db_);
-    queryGetTopClient.prepare("SELECT TOP (5) WITH TIES Client.name, COUNT(Purschase.id) FROM Purschase\
-                              JOIN Client ON Client.id = Purschase.id_client\
+    queryGetTopClient.prepare("SELECT client.name, COUNT(purschase.id) FROM purschase\
+                              JOIN client ON client.id = purschase.id_client\
                               WHERE Purschase.id_status != 5\
-                              GROUP BY Client.name\
-                              order by COUNT(Purschase.id) desc");
+                              GROUP BY client.name\
+                              ORDER BY COUNT(purschase.id) desc\
+                              LIMIT 10");
     if (queryGetTopClient.exec())
     {
         while (queryGetTopClient.next())

@@ -22,12 +22,11 @@ namespace jp
         DataLayer::Orders searchOrder(QString str);
         DataLayer::Books searchBook(QString str);
 
-        bool addBook(QString title, QString author, QString genre,
-                     QString publisher, QString year, QString price);
-        bool addOrder(QString number, QString address, QString sum, QTableWidget* comboBook);
+        bool addBook(std::shared_ptr<Book> book);
+        bool addOrder(QString number, QString address, QString sum, QTableWidget* tableBook);
         bool addEmployee(std::shared_ptr<jp::Employee> employee);
         bool addClient(std::string name, std::string number);
-        bool addArrival(QString title, QString count);
+        bool addArrival(std::shared_ptr<Book>, QString count);
         bool addPublisher(std::shared_ptr<jp::Publisher> publisher);
         bool addAuthor(std::shared_ptr<jp::Author> author);
         bool addGenre(std::shared_ptr<jp::Genre> genre);

@@ -17,7 +17,7 @@ namespace jp
     public:
 
         AppBusinessLogic(AuthorizationWindow& auth_window_, QSqlDatabase& db);
-        void loaderOrder(int status = 1) noexcept;
+        void loaderOrder(int status = 4) noexcept;
         void loaderBook() noexcept;
         void loaderEmployee() noexcept;
         void loaderOrderWindow() noexcept;
@@ -30,12 +30,11 @@ namespace jp
         void searchOrderWindow(QString str);
         void searchBookWindow(QString str);
 
-        void addBookWindow(QString title, QString author, QString genre,
-                           QString publisher, QString year, QString price);
+        void addBookWindow(std::shared_ptr<Book> book);
         void addOrderWindow(QString number, QString address, QString sum, QTableWidget* comboBook);
         void addEmployeeWindow(std::shared_ptr<jp::Employee> employee);
         void addClientWindow(std::string name, std::string number);
-        void addArrivalWindow(QString title, QString count);
+        void addArrivalWindow(std::shared_ptr<Book>, QString count);
         void addPublisherWindow(std::shared_ptr<jp::Publisher> publisher);
         void addAuthorWindow(std::shared_ptr<jp::Author> author);
         void addGenreWindow(std::shared_ptr<jp::Genre> genre);

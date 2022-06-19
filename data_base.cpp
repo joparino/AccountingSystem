@@ -6,15 +6,14 @@
 
 const void jp::DataBase::connection() noexcept(false)
 {
-    jp::DataBase::db_ = QSqlDatabase::addDatabase("QODBC3");
-    QString host = "localhost";
-    QString database = "BookStore";
-    db_.setDatabaseName(QString("DRIVER={SQL Server};"
-              "SERVER=DESKTOP-FPF4P4U\\SQLEXPRESS;DATABASE=BookStore;Persist Security Info=true;")
-              .arg(host, database));
+    db_ = QSqlDatabase::addDatabase("QPSQL");
+    db_.setDatabaseName("BookStore");
+    db_.setUserName("postgres");
+    db_.setPassword("secret");
 
-    if(!db_.open())
+    if (!db_.open())
     {
+
         QMessageBox::critical(0, "Ошибка", db_.lastError().text());
     }
 }

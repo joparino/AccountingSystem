@@ -137,7 +137,7 @@ void jp::AppBusinessLogic::loaderBookWindow() noexcept
     add_arrival_window_.clear();
     for (auto& book : controller_.data_layer_.books_)
     {
-        add_arrival_window_.addItemBook(QString::fromStdString(book->title));
+        add_arrival_window_.addItemBook(book);
     }
 }
 
@@ -244,10 +244,9 @@ void jp::AppBusinessLogic::searchBookWindow(QString str)
 }
 
 
-void jp::AppBusinessLogic::addBookWindow(QString title, QString author, QString genre,
-                                         QString publisher, QString year, QString price)
+void jp::AppBusinessLogic::addBookWindow(std::shared_ptr<jp::Book> book)
 {
-    if (controller_.addBook(title, author, genre, publisher, year, price))
+    if (controller_.addBook(book))
     {
         window_.clearBook();
         loaderBook();
@@ -303,9 +302,9 @@ void jp::AppBusinessLogic::addClientWindow(std::string name, std::string number)
 }
 
 
-void jp::AppBusinessLogic::addArrivalWindow(QString title, QString count)
+void jp::AppBusinessLogic::addArrivalWindow(std::shared_ptr<jp::Book> book, QString count)
 {
-    if (controller_.addArrival(title, count))
+    if (controller_.addArrival(book, count))
     {
         window_.clearBook();
         loaderBook();
@@ -313,7 +312,7 @@ void jp::AppBusinessLogic::addArrivalWindow(QString title, QString count)
     }
     else
     {
-        QMessageBox::information(nullptr, "Ошибка", "Добавить количество книги");
+        QMessageBox::information(nullptr, "Ошибка", "Что-то пошло не так");
     }
 }
 

@@ -102,7 +102,7 @@ namespace jp
         std::string patronymic;
         std::string login;
         std::string password;
-        int role;
+        bool role;
         bool isActive;
         friend bool operator==(const std::shared_ptr<jp::Employee>& lhs, const std::string& rhs)
         {

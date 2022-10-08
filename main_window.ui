@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>950</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Книжный магазин</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/shop.png</normaloff>../icons/shop.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::ActionsContextMenu</enum>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTabBar::tab { min-width: 100px; min-width: 100px; }</string>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>120</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="usesScrollButtons">
+       <bool>false</bool>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="tab">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../icons/shop_book.png</normaloff>../icons/shop_book.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="2" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTableWidget" name="tableOrderWidget">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>false</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::SolidLine</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>false</bool>
+            </property>
+            <column>
+             <property name="text">
+              <string>Клиент</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Адрес</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Статус</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Дата</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Сумма</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPushButton" name="addOrder">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Добавить заказ</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QComboBox" name="comboStatus">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="currentIndex">
+               <number>3</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>Отправленные</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Доставленные</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>В сборке</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Созданные</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Отмененные</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <widget class="QLineEdit" name="searchOrder">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>100</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="placeholderText">
+             <string>Поиск по клиенту....</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../icons/book.png</normaloff>../icons/book.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QPushButton" name="addBook">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Добавить книгу</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QPushButton" name="addArrival">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Добавить поступление</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QTableWidget" name="tableBookWidget">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="midLineWidth">
+             <number>2</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="tabKeyNavigation">
+             <bool>true</bool>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="textElideMode">
+             <enum>Qt::ElideRight</enum>
+            </property>
+            <property name="showGrid">
+             <bool>true</bool>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::SolidLine</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <column>
+             <property name="text">
+              <string>Название</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Автор</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Жанр(-ы)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Издатель</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Год издания</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Цена</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Количество</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLineEdit" name="searchBook">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="placeholderText">
+             <string>Поиск книги...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../icons/clipboard.png</normaloff>../icons/clipboard.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0" colspan="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QCommandLinkButton" name="sales">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Продажи за 3 месяца</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../icons/growth.png</normaloff>../icons/growth.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>60</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0" colspan="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QCommandLinkButton" name="topClient">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Самые частые покупатели</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../icons/client.png</normaloff>../icons/client.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>60</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QCommandLinkButton" name="topSellingBooksMonth">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Самые продаваемые книги за месяц</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../icons/bookReport.png</normaloff>../icons/bookReport.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>60</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="3" column="0" colspan="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QCommandLinkButton" name="topSellingBooks">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Самые продаваемые книги</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../icons/bookReport.png</normaloff>../icons/bookReport.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>60</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <property name="leftMargin">
+           <number>200</number>
+          </property>
+          <item>
+           <widget class="QCommandLinkButton" name="logout">
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../icons/exit.png</normaloff>../icons/exit.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>addBook</tabstop>
+  <tabstop>addArrival</tabstop>
+  <tabstop>tableBookWidget</tabstop>
+  <tabstop>searchBook</tabstop>
+  <tabstop>tableOrderWidget</tabstop>
+  <tabstop>searchOrder</tabstop>
+  <tabstop>addOrder</tabstop>
+  <tabstop>comboStatus</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>searchOrder</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>searchOrder()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addOrder</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddOrderWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addBook</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddBookWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>341</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchBook</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>searchBook()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addArrival</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToAddArrivalWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>729</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tableOrderWidget</sender>
+   <signal>itemDoubleClicked(QTableWidgetItem*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToOrderWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>342</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sales</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToSales()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>281</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>topSellingBooks</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToTopSelling()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>281</x>
+     <y>141</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>topSellingBooksMonth</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToTopSellingMonth()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>281</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tableBookWidget</sender>
+   <signal>itemDoubleClicked(QTableWidgetItem*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToBookWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboStatus</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>filter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>735</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>topClient</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>goToTopClient()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>386</x>
+     <y>153</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logout</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>logout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>911</x>
+     <y>485</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>searchOrder()</slot>
+  <slot>goToAddOrderWindow()</slot>
+  <slot>goToAddBookWindow()</slot>
+  <slot>searchBook()</slot>
+  <slot>goToAddArrivalWindow()</slot>
+  <slot>goToOrderWindow()</slot>
+  <slot>goToSales()</slot>
+  <slot>goToTopSelling()</slot>
+  <slot>goToTopSellingMonth()</slot>
+  <slot>goToBookWindow()</slot>
+  <slot>filter()</slot>
+  <slot>goToTopClient()</slot>
+  <slot>logout()</slot>
+ </slots>
+</ui>
